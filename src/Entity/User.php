@@ -44,6 +44,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $updated_at = null;
 
+    public function __construct()
+    {
+        $this->roles = ['ROLE_USER'];
+        $this->status = 1;
+        $this->created_at = new \DateTime();
+        $this->updated_at = new \DateTime();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
