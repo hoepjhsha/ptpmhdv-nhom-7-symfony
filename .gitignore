@@ -1,3 +1,7 @@
+###> code-editors ###
+.vscode
+.idea
+###< code-editors ###
 
 ###> symfony/framework-bundle ###
 /.env.local
@@ -14,12 +18,19 @@
 .phpunit.result.cache
 ###< phpunit/phpunit ###
 
-###> symfony/phpunit-bridge ###
-.phpunit.result.cache
-/phpunit.xml
-###< symfony/phpunit-bridge ###
-
 ###> symfony/asset-mapper ###
 /public/assets/
 /assets/vendor/
 ###< symfony/asset-mapper ###
+
+###> cache ###
+*.cache
+###< cache ###
+
+###> logs ###
+*.log
+###< logs ###
+
+###> ignores ###
+!/assets/vendor/
+###< ignores ###

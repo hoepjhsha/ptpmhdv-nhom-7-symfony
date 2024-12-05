@@ -1,4 +1,4 @@
-Symfony Demo Application
+Dastone HDV Symfony Application
 ========================
 
 The "Symfony Demo Application" is a reference application created to show how
@@ -9,41 +9,24 @@ You can also learn about these practices in [the official Symfony Book][5].
 Requirements
 ------------
 
-  * PHP 8.2.0 or higher;
+  * PHP 8.3.0 or higher;
   * PDO-SQLite PHP extension enabled;
   * and the [usual Symfony application requirements][2].
 
 Installation
 ------------
 
-There are 3 different ways of installing this project depending on your needs:
+There is a way of installing this project depending on your needs:
 
-**Option 1.** [Download Symfony CLI][4] and use the `symfony` binary installed
-on your computer to run this command:
-
-```bash
-symfony new --demo my_project
-```
-
-**Option 2.** [Download Composer][6] and use the `composer` binary installed
+**This.** [Download Composer][6] and use the `composer` binary installed
 on your computer to run these commands:
 
 ```bash
-# you can create a new project based on the Symfony Demo project...
-composer create-project symfony/symfony-demo my_project
-
 # ...or you can clone the code repository and install its dependencies
-git clone https://github.com/symfony/demo.git my_project
-cd my_project/
+git clone https://github.com/hoepjhsha/ptpmhdv-nhom-7-symfony.git
+cd ptpmhdv-nhom-7-symfony/
 composer install
 ```
-
-**Option 3.** Click the following button to deploy this project on Platform.sh,
-the official Symfony PaaS, so you can try it without installing anything locally:
-
-<p align="center">
-<a href="https://console.platform.sh/projects/create-project?template=https://raw.githubusercontent.com/symfonycorp/platformsh-symfony-template-metadata/main/symfony-demo.template.yaml&utm_content=symfonycorp&utm_source=github&utm_medium=button&utm_campaign=deploy_on_platform"><img src="https://platform.sh/images/deploy/lg-blue.svg" alt="Deploy on Platform.sh" width="180px" /></a>
-</p>
 
 Usage
 -----
@@ -54,7 +37,7 @@ There's no need to configure anything before running the application. There are
 **Option 1.** [Download Symfony CLI][4] and run this command:
 
 ```bash
-cd my_project/
+cd ptpmhdv-nhom-7-symfony/
 symfony serve
 ```
 
@@ -66,7 +49,7 @@ Then access the application in your browser at the given URL (<https://localhost
 On your local machine, you can run this command to use the built-in PHP web server:
 
 ```bash
-cd my_project/
+cd ptpmhdv-nhom-7-symfony/
 php -S localhost:8000 -t public/
 ```
 
@@ -76,7 +59,7 @@ Tests
 Execute this command to run tests:
 
 ```bash
-cd my_project/
+cd ptpmhdv-nhom-7-symfony/
 ./bin/phpunit
 ```
 
