@@ -5,8 +5,10 @@ namespace App\Entity;
 use App\Repository\ItemRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: ItemRepository::class)]
+#[Vich\Uploadable]
 class Item
 {
     #[ORM\Id]
@@ -23,14 +25,18 @@ class Item
     #[ORM\Column(type: Types::DECIMAL, precision: 65, scale: 2)]
     private ?string $item_price = null;
 
-    #[ORM\Column]
-    private ?int $item_category_id = null;
+    #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'items')]
+    #[ORM\JoinColumn(name: 'item_category_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    private ?Category $category = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $item_image = null;
 
     #[ORM\Column(type: TYPES::TEXT, nullable: true)]
     private ?string $item_description = null;
+
+    #[Vich\UploadableField(mapping: 'items', fileNameProperty: 'imageName', size: 'imageSize')]
+    private ?string $imageFile = null;
 
     public function getId(): ?int
     {
@@ -80,14 +86,14 @@ class Item
         return $this;
     }
 
-    public function getItemCategoryId(): ?int
+    public function getCategory(): ?Category
     {
-        return $this->item_category_id;
+        return $this->category;
     }
 
-    public function setItemCategoryId(int $item_category_id): static
+    public function setCategory(?Category $category): static
     {
-        $this->item_category_id = $item_category_id;
+        $this->category = $category;
 
         return $this;
     }
@@ -112,6 +118,18 @@ class Item
     public function setItemDescription(?string $item_description): static
     {
         $this->item_description = $item_description;
+
+        return $this;
+    }
+
+    public function getImageFile(): ?string
+    {
+        return $this->imageFile;
+    }
+
+    public function setImageFile(string $imageFile): static
+    {
+        $this->imageFile = $imageFile;
 
         return $this;
     }
