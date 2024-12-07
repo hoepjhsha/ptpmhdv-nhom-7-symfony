@@ -26,7 +26,7 @@
                                 <div class="quantity mt-3 ">
                                     <form action="{{ url('shop_cart_add') }}" method="post">
                                         <input type="hidden" name="item_id" value="{{ item.id }}">
-                                        <input class="form-control form-control-sm" type="number" name="quantity" min="0" value="0" id="example-number-input">
+                                        <input class="form-control form-control-sm" type="number" name="quantity" min="1" value="1" id="example-number-input">
                                         <button type="submit" class="btn btn-primary btn-sm text-white px-4 d-inline-block"><i class="mdi mdi-cart me-2"></i>Add to Cart</button>
                                     </form>
                                 </div>
