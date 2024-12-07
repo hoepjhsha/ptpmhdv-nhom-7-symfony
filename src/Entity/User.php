@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -44,12 +46,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $updated_at = null;
 
+    #[ORM\OneToOne(mappedBy: 'user_id', cascade: ['persist', 'remove'])]
+    private ?Order $orders = null;
+
+    /**
+     * @var Collection<int, OrderHistory>
+     */
+    #[ORM\OneToMany(targetEntity: OrderHistory::class, mappedBy: 'user_id', orphanRemoval: true)]
+    private Collection $orderHistories;
+
     public function __construct()
     {
         $this->roles = ['ROLE_USER'];
         $this->status = 1;
         $this->created_at = new \DateTime();
         $this->updated_at = new \DateTime();
+        $this->orderHistories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -171,6 +183,53 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setUpdatedAt(\DateTimeInterface $updated_at): static
     {
         $this->updated_at = $updated_at;
+
+        return $this;
+    }
+
+    public function getOrders(): ?Order
+    {
+        return $this->orders;
+    }
+
+    public function setOrders(Order $orders): static
+    {
+        // set the owning side of the relation if necessary
+        if ($orders->getUserId() !== $this) {
+            $orders->setUserId($this);
+        }
+
+        $this->orders = $orders;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, OrderHistory>
+     */
+    public function getOrderHistories(): Collection
+    {
+        return $this->orderHistories;
+    }
+
+    public function addOrderHistory(OrderHistory $orderHistory): static
+    {
+        if (!$this->orderHistories->contains($orderHistory)) {
+            $this->orderHistories->add($orderHistory);
+            $orderHistory->setUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrderHistory(OrderHistory $orderHistory): static
+    {
+        if ($this->orderHistories->removeElement($orderHistory)) {
+            // set the owning side to null (unless already changed)
+            if ($orderHistory->getUserId() === $this) {
+                $orderHistory->setUserId(null);
+            }
+        }
 
         return $this;
     }

@@ -54,7 +54,7 @@ class CategoryController extends BaseController
         if (is_null($categories)) {
             $this->addFlash('error', 'Categories not found');
 
-            return $this->redirectToRoute('admin_dashboard');
+//            return $this->redirectToRoute('admin_dashboard');
         }
 
         return $this->render('admin/category/index.html.twig', [
