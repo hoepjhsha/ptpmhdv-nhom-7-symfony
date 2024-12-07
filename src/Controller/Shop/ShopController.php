@@ -11,6 +11,7 @@ namespace App\Controller\Shop;
 
 use App\Controller\BaseController;
 use App\Entity\User;
+use App\Entity\Wallet;
 use App\Repository\OrderItemRepository;
 use App\Repository\OrderRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -57,7 +58,7 @@ class ShopController extends BaseController
             $this->em->flush();
         }
 
-        $items = $this->getJsonArray('http://hdv.local' . $this->generateUrl('api_item_shop_list'));
+        $items = $this->getJsonArray('http://dastonehdv.local' . $this->generateUrl('api_item_shop_list'));
 
         if (is_null($items)) {
             $this->addFlash('error', 'No products found in the system.');
@@ -72,7 +73,7 @@ class ShopController extends BaseController
     #[Route(path: '/product/{id}', name: 'view', methods: ['GET'])]
     public function viewProduct(int $id): Response
     {
-        $item = $this->getJsonArray('http://hdv.local' . $this->generateUrl('api_item_shop_view', ['id' => $id]));
+        $item = $this->getJsonArray('http://dastonehdv.local' . $this->generateUrl('api_item_shop_view', ['id' => $id]));
 
         if (is_null($item)) {
             $this->addFlash('error', 'Product not found in the system.');
