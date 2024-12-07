@@ -32,6 +32,7 @@ class Wallet
 
     public function __construct()
     {
+        $this->currency = 0;
         $this->transactionHistories = new ArrayCollection();
     }
 

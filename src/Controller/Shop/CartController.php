@@ -139,15 +139,19 @@ class CartController extends BaseController
             $data[] = $orderItem;
         }
 
-//        dd($data);
+        $totalMoney = 0;
+        foreach ($data as $item) {
+            $totalMoney += $item->getItem()->getItemPrice() * $item->getQuantity();
+        }
 
         return $this->render('shop/cart.html.twig', [
             'page_title' => 'Cart',
             'orderItems' => $data,
+            'totalMoney' => $totalMoney,
         ]);
     }
 
-    #[Route('/cart/checkout', name: 'cart_checkout', methods: ['GET', 'POST'])]
+    #[Route('/cart/handle-checkout', name: 'cart_checkout', methods: ['GET', 'POST'])]
     public function checkout(Request $request): Response
     {
         $user = $this->security->getUser();
@@ -164,7 +168,7 @@ class CartController extends BaseController
             return $this->redirectToRoute('shop_cart');
         }
 
-        $order = $this->orderRepository->findOneBy(['user_id' => $user]);
+        $order = $this->orderRepository->findOneBy(['user' => $user]);
         if (!$order) {
             $this->addFlash('error', 'Your cart is empty.');
             return $this->redirectToRoute('shop_cart');
@@ -184,6 +188,13 @@ class CartController extends BaseController
                 'quantity' => $quantity,
                 'price' => $price,
             ];
+        }
+
+        if ($user->getWallet()->getCurrency() >= $totalPrice) {
+            $user->getWallet()->setCurrency($user->getWallet()->getCurrency() - $totalPrice);
+        } else {
+            $this->addFlash('error', 'Not enough money in your wallet to checkout.');
+            return $this->redirectToRoute('shop_cart');
         }
 
         $orderHistory = new OrderHistory();

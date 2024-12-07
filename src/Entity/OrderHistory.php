@@ -29,7 +29,7 @@ class OrderHistory
     private array $order_items = [];
 
     #[ORM\ManyToOne(inversedBy: 'orderHistories')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?Address $address = null;
 
     public function getId(): ?int

@@ -57,7 +57,7 @@
                                         </p>
                                     </td>
                                     <td>{{ item.category }}</td>
-                                    <td>{{ item.price }}</td>
+                                    <td>{{ item.price | number_format(0, ',', '.') }} VND</td>
                                     <td>
                                         <a class="fa fa-shopping-cart" href="{{ item.action.view }}" style="cursor:pointer;"></a>
 {#                                        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">#}
