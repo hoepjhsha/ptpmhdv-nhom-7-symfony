@@ -7,6 +7,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: OrderHistoryRepository::class)]
+#[ORM\Table(name: 'order_histories')]
 class OrderHistory
 {
     #[ORM\Id]
@@ -14,9 +15,9 @@ class OrderHistory
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'orderHistories')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?User $user_id = null;
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'orderHistories')]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    private ?User $user = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 65, scale: 2)]
     private ?string $total_price = null;
@@ -26,6 +27,10 @@ class OrderHistory
 
     #[ORM\Column]
     private array $order_items = [];
+
+    #[ORM\ManyToOne(inversedBy: 'orderHistories')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Address $address = null;
 
     public function getId(): ?int
     {
@@ -39,14 +44,14 @@ class OrderHistory
         return $this;
     }
 
-    public function getUserId(): ?User
+    public function getUser(): ?User
     {
-        return $this->user_id;
+        return $this->user;
     }
 
-    public function setUserId(?User $user_id): static
+    public function setUser(?User $user): static
     {
-        $this->user_id = $user_id;
+        $this->user = $user;
 
         return $this;
     }
@@ -83,6 +88,18 @@ class OrderHistory
     public function setOrderItems(array $order_items): static
     {
         $this->order_items = $order_items;
+
+        return $this;
+    }
+
+    public function getAddress(): ?Address
+    {
+        return $this->address;
+    }
+
+    public function setAddress(?Address $address): static
+    {
+        $this->address = $address;
 
         return $this;
     }

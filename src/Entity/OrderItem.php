@@ -14,12 +14,12 @@ class OrderItem
     private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: Order::class,inversedBy: 'orderItems')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Order $order_id = null;
+    #[ORM\JoinColumn(name: 'order_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    private ?Order $order = null;
 
     #[ORM\ManyToOne(targetEntity: Item::class,inversedBy: 'orderItems')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Item $item_id = null;
+    #[ORM\JoinColumn(name: 'item_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    private ?Item $item = null;
 
     #[ORM\Column]
     private ?int $quantity = null;
@@ -36,26 +36,26 @@ class OrderItem
         return $this;
     }
 
-    public function getOrderId(): ?Order
+    public function getOrder(): ?Order
     {
-        return $this->order_id;
+        return $this->order;
     }
 
-    public function setOrderId(?Order $order_id): static
+    public function setOrder(?Order $order): static
     {
-        $this->order_id = $order_id;
+        $this->order = $order;
 
         return $this;
     }
 
-    public function getItemId(): ?Item
+    public function getItem(): ?Item
     {
-        return $this->item_id;
+        return $this->item;
     }
 
-    public function setItemId(?Item $item_id): static
+    public function setItem(?Item $item): static
     {
-        $this->item_id = $item_id;
+        $this->item = $item;
 
         return $this;
     }

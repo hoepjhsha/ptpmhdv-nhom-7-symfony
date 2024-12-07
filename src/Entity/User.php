@@ -55,6 +55,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: OrderHistory::class, mappedBy: 'user_id', orphanRemoval: true)]
     private Collection $orderHistories;
 
+    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
+    private ?Wallet $wallet = null;
+
     public function __construct()
     {
         $this->roles = ['ROLE_USER'];
@@ -230,6 +233,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $orderHistory->setUserId(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getWallet(): ?Wallet
+    {
+        return $this->wallet;
+    }
+
+    public function setWallet(Wallet $wallet): static
+    {
+        // set the owning side of the relation if necessary
+        if ($wallet->getUser() !== $this) {
+            $wallet->setUser($this);
+        }
+
+        $this->wallet = $wallet;
 
         return $this;
     }

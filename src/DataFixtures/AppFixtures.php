@@ -17,46 +17,6 @@ class AppFixtures extends Fixture
         $spreadsheet = IOFactory::load($filePath);
         $worksheet = $spreadsheet->getActiveSheet();
 
-        $data = [];
-        $first = true;
-
-        foreach ($worksheet->getRowIterator() as $row) {
-            if ($first) {
-                $first = false;
-                continue;
-            }
-
-            $rowData = [];
-            $rowData[] = $worksheet->getCell('B' . $row->getRowIndex())->getValue();
-            $rowData[] = $worksheet->getCell('C' . $row->getRowIndex())->getValue();
-            $rowData[] = $worksheet->getCell('J' . $row->getRowIndex())->getValue();
-            $rowData[] = $worksheet->getCell('E' . $row->getRowIndex())->getValue();
-            $rowData[] = $worksheet->getCell('R' . $row->getRowIndex())->getValue();
-            $rowData[] = $worksheet->getCell('S' . $row->getRowIndex())->getValue();
-
-            $data[] = $rowData;
-        }
-
-        foreach ($data as $row) {
-            if (in_array(null, $row, true)) {
-                continue;
-            }
-
-            if ($row[3] == 2) {
-                continue;
-            }
-
-            $item = new Item();
-            $item->setItemCode($row[0]);
-            $item->setItemName($row[1]);
-            $item->setItemPrice($row[2]);
-            $item->setItemCategoryId((int)$row[3]);
-            $item->setItemImage($row[4]);
-            $item->setItemDescription($row[5]);
-
-            $manager->persist($item);
-        }
-
         $dataCat = [];
         $first = true;
 
@@ -90,6 +50,46 @@ class AppFixtures extends Fixture
             $category->setCategoryName($row[1]);
 
             $manager->persist($category);
+        }
+
+        $data = [];
+        $first = true;
+
+        foreach ($worksheet->getRowIterator() as $row) {
+            if ($first) {
+                $first = false;
+                continue;
+            }
+
+            $rowData = [];
+            $rowData[] = $worksheet->getCell('B' . $row->getRowIndex())->getValue();
+            $rowData[] = $worksheet->getCell('C' . $row->getRowIndex())->getValue();
+            $rowData[] = $worksheet->getCell('J' . $row->getRowIndex())->getValue();
+            $rowData[] = $worksheet->getCell('E' . $row->getRowIndex())->getValue();
+            $rowData[] = $worksheet->getCell('R' . $row->getRowIndex())->getValue();
+            $rowData[] = $worksheet->getCell('S' . $row->getRowIndex())->getValue();
+
+            $data[] = $rowData;
+        }
+
+        foreach ($data as $row) {
+            if (in_array(null, $row, true)) {
+                continue;
+            }
+
+            if ($row[3] == 2) {
+                continue;
+            }
+
+            $item = new Item();
+            $item->setItemCode($row[0]);
+            $item->setItemName($row[1]);
+            $item->setItemPrice($row[2]);
+            $item->setCategory($manager->getRepository(Category::class)->find((int)$row[3]));
+            $item->setItemImage($row[4]);
+            $item->setItemDescription($row[5]);
+
+            $manager->persist($item);
         }
 
         $user = new User();

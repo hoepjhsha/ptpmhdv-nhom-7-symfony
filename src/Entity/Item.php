@@ -135,18 +135,6 @@ class Item
         return $this;
     }
 
-    public function getImageFile(): ?string
-    {
-        return $this->imageFile;
-    }
-
-    public function setImageFile(string $imageFile): static
-    {
-        $this->imageFile = $imageFile;
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, OrderItem>
      */
@@ -168,7 +156,6 @@ class Item
     public function removeOrderItem(OrderItem $orderItem): static
     {
         if ($this->orderItems->removeElement($orderItem)) {
-            // set the owning side to null (unless already changed)
             if ($orderItem->getItemId() === $this) {
                 $orderItem->setItemId(null);
             }
