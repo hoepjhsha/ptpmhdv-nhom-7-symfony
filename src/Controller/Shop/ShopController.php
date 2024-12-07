@@ -39,7 +39,25 @@ class ShopController extends BaseController
     #[Route(path: '/', name: 'list', methods: ['GET'])]
     public function index(): Response
     {
-        $items = $this->getJsonArray('http://dastonehdv.local' . $this->generateUrl('api_item_shop_list'));
+        $user = $this->security->getUser();
+        if (!$user instanceof User) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        $wallet = $user->getWallet();
+
+        if (!$wallet) {
+            $wallet = new Wallet();
+            $wallet->setUser($user);
+
+            $this->em->persist($wallet);
+
+            $user->setWallet($wallet);
+            $this->em->persist($user);
+            $this->em->flush();
+        }
+
+        $items = $this->getJsonArray('http://hdv.local' . $this->generateUrl('api_item_shop_list'));
 
         if (is_null($items)) {
             $this->addFlash('error', 'No products found in the system.');
@@ -54,7 +72,7 @@ class ShopController extends BaseController
     #[Route(path: '/product/{id}', name: 'view', methods: ['GET'])]
     public function viewProduct(int $id): Response
     {
-        $item = $this->getJsonArray('http://dastonehdv.local' . $this->generateUrl('api_item_shop_view', ['id' => $id]));
+        $item = $this->getJsonArray('http://hdv.local' . $this->generateUrl('api_item_shop_view', ['id' => $id]));
 
         if (is_null($item)) {
             $this->addFlash('error', 'Product not found in the system.');
