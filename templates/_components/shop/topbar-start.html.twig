@@ -37,6 +37,9 @@
             <li class="creat-btn">
                 <div class="nav-link">
                     <button class=" btn btn-sm btn-soft-primary" role="button"><i class="fas fa-shopping-cart me-2"></i>Shop</button>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <a href="{{ url('admin_dashboard') }}" class=" btn btn-sm btn-soft-primary" role="button"><i class="fas fa-home me-2"></i>Dashboard</a>
+                    {% endif %}
                 </div>
             </li>
         </ul>

@@ -4,7 +4,10 @@ namespace App\DataFixtures;
 
 use App\Entity\Category;
 use App\Entity\Item;
+use App\Entity\OrderHistory;
 use App\Entity\User;
+use DateInvalidOperationException;
+use DateMalformedStringException;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -105,6 +108,39 @@ class AppFixtures extends Fixture
         $manager->persist($user);
         $manager->persist($user2);
 
+        for ($i = 0; $i < 15; $i++) {
+            $orderHistory = new OrderHistory();
+
+            $orderHistory->setUser($user2);
+
+            $totalPrice = mt_rand(200000, 15000000) / 100;
+
+            $orderHistory->setTotalPrice(number_format($totalPrice, 2, '.', ''));
+            $createdAt = $this->getRandomDateWithinLast3Months();
+            $orderHistory->setCreatedAt($createdAt);
+            $orderHistory->setOrderItems(['item1', 'item2', 'item3']);
+
+            $manager->persist($orderHistory);
+        }
+
         $manager->flush();
+    }
+
+    /**
+     * @throws DateMalformedStringException
+     * @throws DateInvalidOperationException
+     */
+    private function getRandomDateWithinLast3Months(): \DateTime
+    {
+        $now = new \DateTime();
+
+        $interval = new \DateInterval('P3M');
+        $now->sub($interval);
+
+        $randomDays = mt_rand(0, 90);
+
+        $now->modify("-$randomDays days");
+
+        return $now;
     }
 }
