@@ -44,7 +44,7 @@ class CartController extends BaseController
     {
         $user = $this->security->getUser();
         if (!$user instanceof User) {
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('app_login');
         }
 
         $itemId = $request->request->get('item_id');
@@ -58,14 +58,14 @@ class CartController extends BaseController
         }
 
         $order = $this->orderRepository->getOrCreateOrderForUser($user);
-        $orderItem = $this->orderItemRepository->findOneBy(['order_id' => $order, 'item_id' => $item]);
+        $orderItem = $this->orderItemRepository->findOneBy(['order' => $order, 'item' => $item]);
 
         if ($orderItem) {
             $orderItem->setQuantity($orderItem->getQuantity() + $quantity);
         } else {
             $orderItem = new OrderItem();
-            $orderItem->setOrderId($order);
-            $orderItem->setItemId($item);
+            $orderItem->setOrder($order);
+            $orderItem->setItem($item);
             $orderItem->setQuantity($quantity);
             $this->em->persist($orderItem);
         }
@@ -81,14 +81,14 @@ class CartController extends BaseController
     {
         $user = $this->security->getUser();
         if (!$user instanceof User) {
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('app_login');
         }
 
         $itemId = $request->request->get($id);
         $item = $this->em->getRepository(Item::class)->find($id);
 
         $order = $this->orderRepository->getOrCreateOrderForUser($user);
-        $orderItem = $this->orderItemRepository->findOneBy(['order_id' => $order, 'item_id' => $item]);
+        $orderItem = $this->orderItemRepository->findOneBy(['order' => $order, 'item' => $item]);
 
         if ($orderItem) {
             $this->em->remove($orderItem);
@@ -98,12 +98,12 @@ class CartController extends BaseController
         return $this->redirectToRoute('shop_cart');
     }
 
-    #[Route('/cart/update', name: 'cart_update', methods: ['POST'])]
+    #[Route('/cart/update', name: 'cart_update', methods: ['GET', 'POST'])]
     public function updateCart(Request $request): Response
     {
         $user = $this->security->getUser();
         if (!$user instanceof User) {
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('app_login');
         }
 
         $order = $this->orderRepository->getOrCreateOrderForUser($user);
@@ -139,6 +139,8 @@ class CartController extends BaseController
             $data[] = $orderItem;
         }
 
+//        dd($data);
+
         return $this->render('shop/cart.html.twig', [
             'page_title' => 'Cart',
             'orderItems' => $data,
@@ -172,7 +174,7 @@ class CartController extends BaseController
         $orderItems = $order->getOrderItems();
         $itemsSummary = [];
         foreach ($orderItems as $orderItem) {
-            $item = $orderItem->getItemId();
+            $item = $orderItem->getItem();
             $quantity = $orderItem->getQuantity();
             $price = $item->getItemPrice();
             $totalPrice += $price * $quantity;
@@ -185,7 +187,7 @@ class CartController extends BaseController
         }
 
         $orderHistory = new OrderHistory();
-        $orderHistory->setUserId($user);
+        $orderHistory->setUser($user);
         $orderHistory->setOrderItems($itemsSummary);
         $orderHistory->setTotalPrice($totalPrice);
         $orderHistory->setCreatedAt(new \DateTime());
@@ -196,7 +198,6 @@ class CartController extends BaseController
             $this->em->remove($orderItem);
         }
 
-//        $order->setStatus('completed');
         $this->em->persist($order);
 
         $this->em->flush();

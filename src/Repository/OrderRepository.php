@@ -28,7 +28,7 @@ class OrderRepository extends ServiceEntityRepository
     {
         // Check if the user already has an order
         $order = $this->createQueryBuilder('o')
-            ->andWhere('o.user_id = :user')
+            ->andWhere('o.user = :user')
             ->setParameter('user', $user)
             ->getQuery()
             ->getOneOrNullResult();
@@ -36,7 +36,7 @@ class OrderRepository extends ServiceEntityRepository
         // If no order exists, create a new one
         if (!$order) {
             $order = new Order();
-            $order->setUserId($user);
+            $order->setUser($user);
             $order->setCreatedAt(new \DateTime());
             $order->setUpdatedAt(new \DateTime());
 
@@ -50,7 +50,7 @@ class OrderRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('o')
             ->leftJoin('o.orderItems', 'oi')
             ->addSelect('oi')
-            ->leftJoin('oi.item_id', 'item')
+            ->leftJoin('oi.item', 'item')
             ->addSelect('item')
             ->where('o.id = :id')
             ->setParameter('id', $order->getId())

@@ -9,6 +9,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: WalletRepository::class)]
+#[ORM\Table(name: 'wallets')]
 class Wallet
 {
     #[ORM\Id]
@@ -91,7 +92,6 @@ class Wallet
     public function removeTransactionHistory(TransactionHistory $transactionHistory): static
     {
         if ($this->transactionHistories->removeElement($transactionHistory)) {
-            // set the owning side to null (unless already changed)
             if ($transactionHistory->getWallet() === $this) {
                 $transactionHistory->setWallet(null);
             }

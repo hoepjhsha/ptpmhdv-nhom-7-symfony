@@ -12,6 +12,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_USERNAME', fields: ['username'])]
+#[ORM\Table(name: 'users')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -46,7 +47,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $updated_at = null;
 
-    #[ORM\OneToOne(mappedBy: 'user_id', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
     private ?Order $orders = null;
 
     /**
@@ -198,8 +199,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setOrders(Order $orders): static
     {
         // set the owning side of the relation if necessary
-        if ($orders->getUserId() !== $this) {
-            $orders->setUserId($this);
+        if ($orders->getUser() !== $this) {
+            $orders->setUser($this);
         }
 
         $this->orders = $orders;
@@ -219,7 +220,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->orderHistories->contains($orderHistory)) {
             $this->orderHistories->add($orderHistory);
-            $orderHistory->setUserId($this);
+            $orderHistory->setUser($this);
         }
 
         return $this;
@@ -228,9 +229,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeOrderHistory(OrderHistory $orderHistory): static
     {
         if ($this->orderHistories->removeElement($orderHistory)) {
-            // set the owning side to null (unless already changed)
-            if ($orderHistory->getUserId() === $this) {
-                $orderHistory->setUserId(null);
+            if ($orderHistory->getUser() === $this) {
+                $orderHistory->setUser(null);
             }
         }
 
@@ -244,7 +244,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function setWallet(Wallet $wallet): static
     {
-        // set the owning side of the relation if necessary
         if ($wallet->getUser() !== $this) {
             $wallet->setUser($this);
         }

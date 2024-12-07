@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: ItemRepository::class)]
-#[Vich\Uploadable]
+#[ORM\Table(name: 'items')]
 class Item
 {
     #[ORM\Id]
@@ -37,13 +37,10 @@ class Item
     #[ORM\Column(type: TYPES::TEXT, nullable: true)]
     private ?string $item_description = null;
 
-    #[Vich\UploadableField(mapping: 'items', fileNameProperty: 'imageName', size: 'imageSize')]
-    private ?string $imageFile = null;
-
     /**
      * @var Collection<int, OrderItem>
      */
-    #[ORM\OneToMany(targetEntity: OrderItem::class, mappedBy: 'item_id', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: OrderItem::class, mappedBy: 'item', orphanRemoval: true)]
     private Collection $orderItems;
 
     public function __construct()
@@ -147,7 +144,7 @@ class Item
     {
         if (!$this->orderItems->contains($orderItem)) {
             $this->orderItems->add($orderItem);
-            $orderItem->setItemId($this);
+            $orderItem->setItem($this);
         }
 
         return $this;
@@ -156,8 +153,8 @@ class Item
     public function removeOrderItem(OrderItem $orderItem): static
     {
         if ($this->orderItems->removeElement($orderItem)) {
-            if ($orderItem->getItemId() === $this) {
-                $orderItem->setItemId(null);
+            if ($orderItem->getItem() === $this) {
+                $orderItem->setItem(null);
             }
         }
 

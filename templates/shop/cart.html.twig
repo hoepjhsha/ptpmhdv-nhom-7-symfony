@@ -22,20 +22,20 @@
                                 {% for orderItem in orderItems %}
                                     <tr>
                                         <td>
-                                            <img src="{{ orderItem.itemId.itemImage }}" alt="" height="36">
+                                            <img src="{{ orderItem.item.itemImage }}" alt="" height="36">
                                             <p class="d-inline-block align-middle mb-0">
-                                                <a href="#" class="d-inline-block align-middle mb-0 product-name">{{ orderItem.itemId.itemName }}</a>
+                                                <a href="#" class="d-inline-block align-middle mb-0 product-name">{{ orderItem.item.itemName }}</a>
                                                 <br>
-                                                <span class="text-muted font-13">Category: {{ orderItem.itemId.category.categoryName }}</span>
+                                                <span class="text-muted font-13">Category: {{ orderItem.item.category.categoryName }}</span>
                                             </p>
                                         </td>
-                                        <td>{{ orderItem.itemId.itemPrice }}</td>
+                                        <td>{{ orderItem.item.itemPrice }}</td>
                                         <td>
                                             <input class="form-control form-control-sm w-25" name="quantity[{{ orderItem.id }}]" type="number" value="{{ orderItem.quantity }}" id="example-number-input1">
                                         </td>
-                                        <td>{{ orderItem.itemId.itemPrice * orderItem.quantity }}</td>
+                                        <td>{{ orderItem.item.itemPrice * orderItem.quantity }}</td>
                                         <td>
-                                            <a href="{{ url('shop_cart_remove', {id: orderItem.itemId.id}) }}" class="text-dark"><i class="mdi mdi-close-circle-outline font-18"></i></a>
+                                            <a href="{{ url('shop_cart_remove', {id: orderItem.item.id}) }}" class="text-dark"><i class="mdi mdi-close-circle-outline font-18"></i></a>
                                         </td>
                                     </tr>
                                 {% endfor %}

@@ -25,14 +25,14 @@ class OrderItemRepository extends ServiceEntityRepository
     public function addProductToOrder(Order $order, Item $item, int $quantity): OrderItem
     {
         $orderItem = $this->em->getRepository(OrderItem::class)
-            ->findOneBy(['order_id' => $order, 'item_id' => $item]);
+            ->findOneBy(['order' => $order, 'item' => $item]);
 
         if ($orderItem) {
             $orderItem->setQuantity($orderItem->getQuantity() + $quantity);
         } else {
             $orderItem = new OrderItem();
-            $orderItem->setOrderId($order);
-            $orderItem->setItemId($item);
+            $orderItem->setOrder($order);
+            $orderItem->setItem($item);
             $orderItem->setQuantity($quantity);
             $this->em->persist($orderItem);
         }
@@ -45,7 +45,7 @@ class OrderItemRepository extends ServiceEntityRepository
     public function updateProductInOrder(Order $order, Item $item, int $quantity): ?OrderItem
     {
         $orderItem = $this->em->getRepository(OrderItem::class)
-            ->findOneBy(['order_id' => $order, 'item_id' => $item]);
+            ->findOneBy(['order' => $order, 'item' => $item]);
 
         if ($orderItem) {
             if ($quantity > 0) {
