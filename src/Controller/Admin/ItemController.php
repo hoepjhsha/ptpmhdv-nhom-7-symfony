@@ -53,7 +53,7 @@ class ItemController extends BaseController
     #[Route(path: '/item/list', name: 'item_list', methods: ['GET'])]
     public function index(): Response
     {
-        $items = $this->getJsonArray('http://dastonehdv.local' . $this->generateUrl('api_item_list'));
+        $items = $this->getJsonArray('http://hdv.local' . $this->generateUrl('api_item_list'));
 
         if (is_null($items)) {
             $this->addFlash('error', 'Items not found');
@@ -70,7 +70,7 @@ class ItemController extends BaseController
     #[Route(path: '/item/view/{id}', name: 'item_view', methods: ['GET'])]
     public function viewItem(int $id): Response
     {
-        $item = $this->getJsonArray('http://dastonehdv.local' . $this->generateUrl('api_item_view', ['id' => $id]));
+        $item = $this->getJsonArray('http://hdv.local' . $this->generateUrl('api_item_view', ['id' => $id]));
 
         if (is_null($item)) {
             $this->addFlash('error', 'Item not found');
