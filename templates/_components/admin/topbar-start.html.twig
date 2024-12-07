@@ -2,34 +2,29 @@
 <div class="topbar">
     <!-- Navbar -->
     <nav class="navbar-custom">
-        <ul class="list-unstyled topbar-nav float-end mb-0">
+        <ul class="list-unstyled topbar-nav float-end mb-0 d-flex align-items-center">
             <li class="dropdown hide-phone">
                 <a class="nav-link dropdown-toggle arrow-none waves-light waves-effect" data-bs-toggle="dropdown" href="#" role="button"
                    aria-haspopup="false" aria-expanded="false">
                     <i data-feather="search" class="topbar-icon"></i>
                 </a>
-
-{#                <div class="dropdown-menu dropdown-menu-end dropdown-lg p-0">#}
-{#                    <!-- Top Search Bar -->#}
-{#                    <div class="app-search-topbar">#}
-{#                        <form action="#" method="get">#}
-{#                            <input type="search" name="search" class="from-control top-search mb-0" placeholder="Type text...">#}
-{#                            <button type="submit"><i class="ti-search"></i></button>#}
-{#                        </form>#}
-{#                    </div>#}
-{#                </div>#}
             </li>
 
+            {% if app.user %}
             <li class="dropdown">
                 <a class="nav-link dropdown-toggle waves-effect waves-light nav-user" data-bs-toggle="dropdown" href="#" role="button"
                    aria-haspopup="false" aria-expanded="false">
-                    <span class="ms-1 nav-user-name hidden-sm">Nick</span>
+                    <span class="me-2 nav-user-name hidden-sm">{{ app.user.username | upper }}</span>
                     <img src="{{ asset('images/users/user-5.jpg') }}" alt="profile-user" class="rounded-circle thumb-xs" />
                 </a>
                 <div class="dropdown-menu dropdown-menu-end">
                     <a class="dropdown-item" href="{{ url('app_logout') }}"><i data-feather="power" class="align-self-center icon-xs icon-dual me-1"></i> Logout</a>
                 </div>
             </li>
+            {% else %}
+            <li class="dropdown">
+                <a class="btn btn-outline-blue me-2" href="{{ url('app_login') }}" role="button"><span class="nav-user-name hidden-sm">Login</span></a>
+                {% endif %}
         </ul><!--end topbar-nav-->
 
         <ul class="list-unstyled topbar-nav mb-0">

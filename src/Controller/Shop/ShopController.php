@@ -10,6 +10,11 @@
 namespace App\Controller\Shop;
 
 use App\Controller\BaseController;
+use App\Entity\User;
+use App\Repository\OrderItemRepository;
+use App\Repository\OrderRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -18,6 +23,19 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('PUBLIC_ACCESS')]
 class ShopController extends BaseController
 {
+    private EntityManagerInterface $em;
+    private OrderRepository $orderRepository;
+    private OrderItemRepository $orderItemRepository;
+    private Security $security;
+
+    public function __construct(OrderRepository $orderRepository, OrderItemRepository $orderItemRepository, Security $security, EntityManagerInterface $em)
+    {
+        $this->orderRepository = $orderRepository;
+        $this->orderItemRepository = $orderItemRepository;
+        $this->security = $security;
+        $this->em = $em;
+    }
+
     #[Route(path: '/', name: 'list', methods: ['GET'])]
     public function index(): Response
     {
@@ -45,6 +63,34 @@ class ShopController extends BaseController
         return $this->render('shop/view.html.twig', [
             'page_title' => 'Product Detail',
             'item' => $item
+        ]);
+    }
+
+    #[Route(path: '/checkout', name: 'checkout', methods: ['GET'])]
+    public function checkoutView(): Response
+    {
+        $user = $this->security->getUser();
+        if (!$user instanceof User) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        $order = $this->orderRepository->getOrCreateOrderForUser($user);
+        $orderItems = $order->getOrderItems();
+
+        $data = [];
+        foreach ($orderItems as $orderItem) {
+            $data[] = $orderItem;
+        }
+
+        $totalMoney = 0;
+        foreach ($data as $item) {
+            $totalMoney += $item->getItem()->getItemPrice() * $item->getQuantity();
+        }
+
+        return $this->render('shop/checkout.html.twig', [
+            'page_title' => 'Checkout',
+            'orderItems' => $data,
+            'totalMoney' => $totalMoney,
         ]);
     }
 

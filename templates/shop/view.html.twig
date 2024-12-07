@@ -14,7 +14,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-lg-6 align-self-center">
-                            <img src="{{ item.image }}" alt="" class=" mx-auto  d-block" height="300">
+                            <img src="{{ item.image }}" alt="" class=" mx-auto  d-block" height="200" width="200">
                         </div><!--end col-->
                         <div class="col-lg-6 align-self-center">
                             <div class="single-pro-detail">
@@ -22,7 +22,7 @@
                                 <div class="custom-border mb-3"></div>
                                 <h3 class="pro-title">{{ item.name }}</h3>
                                 <p class="text-muted mb-0">{{ item.category }}</p>
-                                <h2 class="pro-price">Giá: {{ item.price }} VND</h2>
+                                <h2 class="pro-price">Giá: {{ item.price | number_format(0, ',', '.') }} VND</h2>
                                 <div class="quantity mt-3 ">
                                     <form action="{{ url('shop_cart_add') }}" method="post">
                                         <input type="hidden" name="item_id" value="{{ item.id }}">
@@ -45,11 +45,11 @@
                     <h4 class="card-title">Description:</h4>
                 </div>
                 <div class="card-body" style="width: 100%">
-                    <p class="pro-features border-0"><pre style="white-space: pre-wrap;
+                    <p class="pro-features border-0" style="white-space: pre-wrap;
                     word-wrap: break-word;
                     width: 100%;
                     overflow-wrap: break-word;
-                    max-width: 100%;">{{ item.description }}</pre></p>
+                    max-width: 100%;">{{ item.description }}</p>
                 </div><!--end card-body-->
             </div><!--end card-->
         </div><!--end col-->

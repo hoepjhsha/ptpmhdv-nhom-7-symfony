@@ -24,7 +24,7 @@
                                         <td>
                                             <img src="{{ orderItem.item.itemImage }}" alt="" height="36">
                                             <p class="d-inline-block align-middle mb-0">
-                                                <a href="#" class="d-inline-block align-middle mb-0 product-name">{{ orderItem.item.itemName }}</a>
+                                                <a href="{{ url('shop_view', {id: orderItem.item.id}) }}" class="d-inline-block align-middle mb-0 product-name">{{ orderItem.item.itemName }}</a>
                                                 <br>
                                                 <span class="text-muted font-13">Category: {{ orderItem.item.category.categoryName }}</span>
                                             </p>
@@ -33,7 +33,7 @@
                                         <td>
                                             <input class="form-control form-control-sm w-25" name="quantity[{{ orderItem.id }}]" type="number" value="{{ orderItem.quantity }}" id="example-number-input1">
                                         </td>
-                                        <td>{{ orderItem.item.itemPrice * orderItem.quantity }}</td>
+                                        <td>{{ (orderItem.item.itemPrice * orderItem.quantity) | number_format(0, ',', '.') }} VND</td>
                                         <td>
                                             <a href="{{ url('shop_cart_remove', {id: orderItem.item.id}) }}" class="text-dark"><i class="mdi mdi-close-circle-outline font-18"></i></a>
                                         </td>
@@ -57,10 +57,10 @@
                             <div class="mt-4">
                                 <div class="row">
                                     <div class="col-6">
-                                        <a href="#" class="apps-ecommerce-products.html"><i class="fas fa-long-arrow-alt-left me-1"></i> Continue Shopping</a>
+                                        <a href="{{ url('shop_list') }}" class="apps-ecommerce-products.html"><i class="fas fa-long-arrow-alt-left me-1"></i> Continue Shopping</a>
                                     </div>
                                     <div class="col-6 text-right">
-                                        <a href="#" class="">Checkout <i class="fas fa-long-arrow-alt-right ms-1"></i></a>
+                                        <a href="{{ url('shop_checkout') }}" class="">Checkout <i class="fas fa-long-arrow-alt-right ms-1"></i></a>
                                     </div>
                                 </div>
                             </div>
@@ -72,41 +72,11 @@
                                     <tbody>
                                     <tr>
                                         <td class="payment-title">Subtotal</td>
-                                        <td>$496.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="payment-title">Shipping</td>
-                                        <td>
-                                            <ul class="list-unstyled mb-0">
-                                                <li>
-                                                    <div class="radio radio-primary">
-                                                        <input type="radio" name="radio" id="radio_1" value="option_1" checked>
-                                                        <label for="radio_1">
-                                                            Shipping Charge : $5.00
-                                                        </label>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div class="radio radio-primary">
-                                                        <input type="radio" name="radio" id="radio_2" value="option_2">
-                                                        <label for="radio_2">
-                                                            Express Shipping Charge : $10.00
-                                                        </label>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <a href="#" class="text-dark"><strong>Change Address</strong></a>
-                                                </li>
-                                            </ul>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="payment-title">Promo Code</td>
-                                        <td>-$10.00</td>
+                                        <td>{{ totalMoney | number_format(0, ',', '.') }} VND</td>
                                     </tr>
                                     <tr>
                                         <td class="payment-title">Total</td>
-                                        <td class="text-dark"><strong>$491.00</strong></td>
+                                        <td class="text-dark"><strong>{{ totalMoney | number_format(0, ',', '.') }} VND</strong></td>
                                     </tr>
                                     </tbody>
                                 </table>

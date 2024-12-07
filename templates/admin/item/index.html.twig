@@ -80,7 +80,7 @@
                                             </p>
                                         </td>
                                         <td>{{ item.category }}</td>
-                                        <td>{{ item.price }}</td>
+                                        <td>{{ item.price | number_format(0, ',', '.') }} VND</td>
                                         <td>
                                             <a href="{{ item.action.update }}"><i class="las la-pen text-secondary font-16"></i></a>
                                             <a onclick="confirmDelete{{ item.id }}()" style="cursor: pointer;"><i class="las la-trash-alt text-secondary font-16"></i></a>
