@@ -97,4 +97,47 @@ class ItemApi extends BaseController
             ],
         ]]);
     }
+
+    #[Route(path: '/get-items-shop', name: 'item_shop_list', methods: ['GET'])]
+    public function getItemsForShop(): JsonResponse
+    {
+        $items = $this->itemRepository->findAll();
+        $data = [];
+
+        foreach ($items as $key => $item) {
+            $data[] = [
+                'id'      => $item->getId(),
+                'code' => $item->getItemCode(),
+                'name' => $item->getItemName(),
+                'price' => $item->getItemPrice(),
+                'category' => $item->getCategory()->getCategoryName(),
+                'image' => $item->getItemImage(),
+                'description' => $item->getItemDescription() ?? "",
+                'action' => [
+                    'view' => $this->generateUrl('shop_view', ['id' => $item->getId()]),
+                ],
+            ];
+        }
+
+        return new JsonResponse(['data' => $data]);
+    }
+
+    #[Route(path: '/get-item-shop/{id}', name: 'item_shop_view', methods: ['GET'])]
+    public function getItemShop(int $id): JsonResponse
+    {
+        $item = $this->itemRepository->find($id);
+
+        return new JsonResponse(['data' => [
+            'id' => $item->getId(),
+            'code' => $item->getItemCode(),
+            'name' => $item->getItemName(),
+            'price' => $item->getItemPrice(),
+            'category' => $item->getCategory()->getCategoryName(),
+            'image' => $item->getItemImage(),
+            'description' => $item->getItemDescription() ?? "",
+            'action' => [
+                'view' => $this->generateUrl('shop_view', ['id' => $item->getId()]),
+            ],
+        ]]);
+    }
 }
